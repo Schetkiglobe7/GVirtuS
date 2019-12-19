@@ -39,6 +39,8 @@
 #include "Frontend.h"
 #include "CufftFrontend.h"
 
+#include <cuda_runtime_api.h>
+
 using namespace std;
 
 extern "C" cufftResult cufftPlan1d(cufftHandle *plan, int nx, cufftType type,
@@ -486,6 +488,7 @@ extern "C" cufftResult cufftSetStream(cufftHandle plan, cudaStream_t stream) {
     return (cufftResult) CufftFrontend::GetExitCode();
 }
 
+#if CUDART_VERSION <= 9000
 extern "C" cufftResult cufftSetCompatibilityMode(cufftHandle plan,
         cufftCompatibility mode){
     CufftFrontend::Prepare();
@@ -494,8 +497,9 @@ extern "C" cufftResult cufftSetCompatibilityMode(cufftHandle plan,
     CufftFrontend::Execute("cufftSetCompatibilityMode");
     return (cufftResult) CufftFrontend::GetExitCode();
 }
+#endif
 
-#if __CUDA_API_VERSION >= 7000
+#if CUDART_VERSION >= 7000
 extern "C" cufftResult cufftGetProperty(libraryPropertyType type, int* value){
     CufftFrontend::Prepare();
     CufftFrontend::AddVariableForArguments<libraryPropertyType>(type);
@@ -505,7 +509,7 @@ extern "C" cufftResult cufftGetProperty(libraryPropertyType type, int* value){
 }
 #endif
 
-#if __CUDA_API_VERSION >= 7000
+#if CUDART_VERSION >= 7000
 extern "C" cufftResult cufftXtMakePlanMany(cufftHandle plan, int rank, long long int *n, long long int *inembed, long long int istride, long long int idist, cudaDataType inputtype, long long int *onembed, long long int ostride, long long int odist, cudaDataType outputtype, long long int batch, size_t *workSize, cudaDataType executiontype) {
     CufftFrontend::Prepare();
     //Passing Arguments
@@ -663,4 +667,5 @@ extern "C" cufftResult cufftGetVersion(int *version){
     CufftFrontend::Execute("cufftGetVersion");
     return (cufftResult) CufftFrontend::GetExitCode();
 }
+
 
