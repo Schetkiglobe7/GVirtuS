@@ -27,6 +27,7 @@
 #include <errno.h>
 #include <bits/stl_map.h>
 #include <memory>
+#include <cuda_runtime_api.h>
 
 /**
  * @file   Backend.cpp
@@ -215,6 +216,9 @@ CUFFT_ROUTINE_HANDLER(ExecC2R) {
     return std::make_shared<Result>(exit_code,out);
 }
 
+#if CUDART_VERSION <= 9000
+// cufftSetCompatibilityMode() WAS REMOVED IN 9.1 + VERSION
+
 CUFFT_ROUTINE_HANDLER(SetCompatibilityMode) {
     Logger logger=Logger::getInstance(LOG4CPLUS_TEXT("SetCompatibilityMode"));
     cufftHandle plan = in->Get<cufftHandle>();
@@ -223,6 +227,7 @@ CUFFT_ROUTINE_HANDLER(SetCompatibilityMode) {
     cout<<"DEBUG - cufftSetCompatibilityMode Executed\n";
     return std::make_shared<Result>(exit_code);
 }
+#endif
 
 CUFFT_ROUTINE_HANDLER(Create) {
     Logger logger=Logger::getInstance(LOG4CPLUS_TEXT("Create"));
@@ -275,7 +280,7 @@ CUFFT_ROUTINE_HANDLER(SetAutoAllocation){
     return std::make_shared<Result>(exit_code);
 }
 
-#if __CUDA_API_VERSION >= 7000
+#if CUDART_VERSION >= 7000
 /**
     cufftXtMakePlanMAny Handler
     @param    plan     cufftHandle returned by cufftCreate
@@ -515,7 +520,7 @@ CUFFT_ROUTINE_HANDLER(Estimate1d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout<<"DEBUG - "<<e<< endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -536,7 +541,7 @@ CUFFT_ROUTINE_HANDLER(Estimate2d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -559,7 +564,7 @@ CUFFT_ROUTINE_HANDLER(Estimate3d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -590,7 +595,7 @@ CUFFT_ROUTINE_HANDLER(EstimateMany) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -624,7 +629,7 @@ CUFFT_ROUTINE_HANDLER(MakePlan1d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -646,7 +651,7 @@ CUFFT_ROUTINE_HANDLER(MakePlan2d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -669,7 +674,7 @@ CUFFT_ROUTINE_HANDLER(MakePlan3d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -701,7 +706,7 @@ CUFFT_ROUTINE_HANDLER(MakePlanMany) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -755,7 +760,7 @@ CUFFT_ROUTINE_HANDLER(GetSize1d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -778,7 +783,7 @@ CUFFT_ROUTINE_HANDLER(GetSize2d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -801,7 +806,7 @@ CUFFT_ROUTINE_HANDLER(GetSize3d) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -832,7 +837,7 @@ CUFFT_ROUTINE_HANDLER(GetSizeMany) {
     try{
         out->Add(workSize);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -901,7 +906,7 @@ CUFFT_ROUTINE_HANDLER(SetStream) {
     return std::make_shared<Result>(exit_code);
 }
 
-#if __CUDA_API_VERSION >= 7000
+#if CUDART_VERSION >= 7000
 CUFFT_ROUTINE_HANDLER(GetProperty){
     Logger logger=Logger::getInstance(LOG4CPLUS_TEXT("GetProperty"));
     
@@ -933,7 +938,7 @@ CUFFT_ROUTINE_HANDLER(XtMalloc){
     try{
         out->Add(desc);
     } catch (string e){
-        cout << 'DEBUG - ' <<  e << endl;
+        cout << "DEBUG - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -1008,7 +1013,7 @@ CUFFT_ROUTINE_HANDLER(XtMemcpy){
                 break;
         }
     } catch (string e){
-        cout << 'EXCEPTION - ' <<  e << endl;
+        cout << "EXCEPTION - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -1030,7 +1035,7 @@ CUFFT_ROUTINE_HANDLER(XtExecDescriptorC2C){
         exit_code = cufftXtExecDescriptorC2C(plan,input,output,direction);
         out->AddMarshal(output);
     } catch (string e){
-        cout << 'EXCEPTION - ' <<  e << endl;
+        cout << "EXCEPTION - " <<  e << endl;
         LOG4CPLUS_DEBUG(logger,e);
         return std::make_shared<Result>(cudaErrorMemoryAllocation);
     }
@@ -1068,6 +1073,7 @@ CUFFT_ROUTINE_HANDLER(GetVersion){
     int *version = in->Assign<int>();
     cufftResult exit_code = cufftGetVersion(version);
     cout<<"DEBUG - cufftGetVersion Executed"<<endl;
+    return std::make_shared<Result>(exit_code);
 }
 
 
@@ -1099,11 +1105,15 @@ void CufftHandler::Initialize() {
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(GetSize));
     /* - Estimate - */
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(SetWorkArea));
+
+#if CUDART_VERSION <= 9000
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(SetCompatibilityMode));
+#endif
+
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(SetAutoAllocation));
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(GetVersion));
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(SetStream));
-#if __CUDA_API_VERSION >= 7000
+#if CUDART_VERSION >= 7000
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(GetProperty));
 #endif
     /* - Estimate - */
@@ -1123,7 +1133,7 @@ void CufftHandler::Initialize() {
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(ExecD2Z));
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(ExecZ2D));
     /* -- CufftX -- */
-    #if __CUDA_API_VERSION >= 7000
+    #if CUDART_VERSION >= 7000
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(XtMakePlanMany));
     #endif
     mspHandlers->insert(CUFFT_ROUTINE_HANDLER_PAIR(XtSetGPUs));
