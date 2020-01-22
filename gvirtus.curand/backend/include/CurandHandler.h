@@ -35,6 +35,10 @@
 #include "log4cplus/loggingmacros.h"
 #include "log4cplus/configurator.h"
 
+using namespace std;
+using namespace log4cplus;
+
+
 class CurandHandler : public Handler {
 public:
     CurandHandler();
@@ -47,6 +51,7 @@ public:
     void RegisterMapObject(char *,char *);
     char * GetMapObject(char *);
     */
+    static void setLogLevel(Logger *logger);
 private:
     log4cplus::Logger logger;
     void Initialize();

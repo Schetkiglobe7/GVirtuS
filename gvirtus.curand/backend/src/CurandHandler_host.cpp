@@ -42,6 +42,7 @@ CURAND_ROUTINE_HANDLER(CreateGenerator){
     try{
         out->Add<long long int>((long long int)generator);
     } catch (string e){
+        LOG4CPLUS_DEBUG(logger, e);
         return std::make_shared<Result>(cs);
     }
     return std::make_shared<Result>(cs,out);
@@ -57,6 +58,7 @@ CURAND_ROUTINE_HANDLER(CreateGeneratorHost){
     try{
         out->Add<long long int>((long long int)generator);
     } catch (string e){
+	LOG4CPLUS_DEBUG(logger, e);
         return std::make_shared<Result>(cs);
     }
     return std::make_shared<Result>(cs,out);
