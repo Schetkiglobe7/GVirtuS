@@ -1,0 +1,2 @@
+/home/pilato/opt/gvirtus-2019-cuda-9.0/lib/backend/libcudnn-backend.so
+/home/pilato/opt/gvirtus-2019-cuda-9.0/lib/frontend/libcudnn.so
