@@ -50,13 +50,17 @@
 #include "log4cplus/logger.h"
 #include "log4cplus/loggingmacros.h"
 
+using namespace std;
+using namespace log4cplus;
+
+
 class CublasHandler : public Handler {
 public:
   CublasHandler();
   virtual ~CublasHandler();
   bool CanExecute(std::string routine);
   std::shared_ptr<Result> Execute(std::string routine, std::shared_ptr<Buffer> input_buffer);
-
+  static void setLogLevel(Logger *logger);
   /*void * RegisterPointer(void *,size_t);
 
   void RegisterMapObject(char *,char *);
