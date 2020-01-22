@@ -12,6 +12,6 @@ make install
 dot -T pdf .graphviz/gvirtus.cudnn.dot -o gvirtus.cudnn.pdf
 
 echo
-/bin/echo -e "\e[1;30;102mGVIRTUS CUDA TENSORFLOW MODULE INSTALLATION COMPLETE!\e[0m"
+/bin/echo -e "\e[1;30;102mGVIRTUS CUDA DEEP NEURAL NETWORKS MODULE INSTALLATION COMPLETE!\e[0m"
 echo
 echo
