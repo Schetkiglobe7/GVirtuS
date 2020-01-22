@@ -48,6 +48,10 @@
 #include "log4cplus/loggingmacros.h"
 #include "log4cplus/configurator.h"
 
+
+using namespace std;
+using namespace log4cplus;
+
 class CudaDrHandler : public Handler{
 public:
     CudaDrHandler();
@@ -117,7 +121,8 @@ public:
     bool HasSharedMemory() {
         return mpShm != NULL;
     }
-    
+     
+    static void setLogLevel(Logger *logger);
 
 private:
     log4cplus::Logger logger;

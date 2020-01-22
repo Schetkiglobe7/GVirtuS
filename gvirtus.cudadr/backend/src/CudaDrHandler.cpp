@@ -56,6 +56,17 @@ CudaDrHandler::~CudaDrHandler() {
 
 }
 
+void CudaDrHandler::setLogLevel(Logger *logger) {
+        log4cplus::LogLevel logLevel=log4cplus::INFO_LOG_LEVEL;
+        char * val = getenv("GVIRTUS_LOGLEVEL");
+        std::string logLevelString =(val == NULL ? std::string("") : std::string(val));
+        if(logLevelString != "") {
+                logLevel=std::stoi(logLevelString);
+        }
+        logger->setLogLevel(logLevel);
+}
+
+
 bool CudaDrHandler::CanExecute(std::string routine) {
     map<string, CudaDrHandler::CudaDriverHandler>::iterator it;
     it = mspHandlers->find(routine);
