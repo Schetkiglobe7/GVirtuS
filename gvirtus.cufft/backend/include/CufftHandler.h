@@ -59,12 +59,16 @@
  * named CUDA Runtime routine unmarshalling the input parameters from the
  * provided Buffer.
  */
+using namespace std;
+using namespace log4cplus;
+
 class CufftHandler : public Handler {
 public:
     CufftHandler();
     virtual ~CufftHandler();
     bool CanExecute(std::string routine);
     std::shared_ptr<Result> Execute(std::string routine, std::shared_ptr<Buffer> input_buffer);
+    static void setLogLevel(Logger *logger);
 private:
     log4cplus::Logger logger;
     void Initialize();
