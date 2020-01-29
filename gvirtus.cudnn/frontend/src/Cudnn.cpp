@@ -4902,7 +4902,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetCTCLossDescriptor(cudnnCTCLossDescr
    
     CudnnFrontend::Execute("cudnnSetCTCLossDescriptor");
     if(CudnnFrontend::Success()){
-       ctcLossDesc ) CudnnFrontend::GetOutputVariable<cudnnCTCLossDescriptor_t>();
+       ctcLossDesc = CudnnFrontend::GetOutputVariable<cudnnCTCLossDescriptor_t>();
     }
     return CudnnFrontend::GetExitCode();
 }
@@ -4926,189 +4926,558 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetCTCLossDescriptorEx(cudnnCTCLossDes
     return CudnnFrontend::GetExitCode();
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetCTCLossDescriptor(cudnnCTCLossDescriptor_t ctcLossDesc, cudnnDataType_t *compType){
     
- 
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)ctcLossDesc);
+
+    CudnnFrontend::Execute("cudnnGetCTCLossDescriptor");
+    if(CudnnFrontend::Success()){
+       *compType = CudnnFrontend::GetOutputVariable<cudnnDataType_t>();
+    }
+    return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWONAPI cudnnGetCTCLossDescriptorEx(cudnnCTCLossDescriptor_t ctcLossDesc,
+                             					 cudnnDataType_t *compType,
+                            					 cudnnLossNormalizationMode_t *normMode,
+                            					 cudnnNanPropagation_t *gradMode){
 
 
-         
+   CudnnFrontend::Prepare();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)ctcLossDesc);
    
+   CudnnFrontend::Execute("cudnnGetCTCLossDescriptorEx");
+   if(CudnnFrontend::Success()){
+      *compType = CudnnFrontend::GetOutputVariable<cudnnDataType_t>();
+      *normMode = CudnnFrontend::GetOutputVariable<cudnnLossNormalizationMode_t>();
+      *gradMode = CudnnFrontend::GetOutputVariable<cudnnNanPropagation_t>();
+   } 
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyCTCLossDescriptor(cudnnCTCLossDescriptor_t ctcLossDesc){
 
 
+   CudnnFrontend::Prepare();
 
 
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)ctcLossDesc);
+
+   CudnnFrontend::Execute("cudnnDestroyCTCLossDescriptor");
+
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnCTCLoss(cudnnHandle_t handle,
+    						  const cudnnTensorDescriptor_t
+        					  probsDesc,     /* Tensor descriptor for probabilities, the dimensions are T,N,A (T is the timing steps, N is the
+                          mini batch size, A is the alphabet size)  */
+    						  const void *probs, /* probabilities after softmax, in GPU memory */
+    						  const int *labels, /* labels, in CPU memory */
+    					  	  const int *labelLengths,                     /* the length of each label, in CPU memory */
+    						  const int *inputLengths,                     /* the lengths of timing steps in each batch, in CPU memory */
+    						  void *costs,                                 /* the returned costs of CTC, in GPU memory */
+    						  const cudnnTensorDescriptor_t gradientsDesc, /* Tensor descriptor for gradients, the dimensions are T,N,A */
+    						  const void *gradients,   /* the returned CTC gradients, in GPU memory, to compute costs only, set it to NULL */
+    						  cudnnCTCLossAlgo_t algo, /* algorithm selected, supported now 0 and 1 */
+    						  cudnnCTCLossDescriptor_t ctcLossDesc,
+    						  void *workspace,              /* pointer to the workspace, in GPU memory */
+    						  size_t workSpaceSizeInBytes){ /* size of the workspace */
 
 
+    CudnnFrontend::Prepare();
+
+     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+     CudnnFrontend::AddVariableForArguments<long long int>((long long int)probsDesc);
+     CudnnFrontend::AddHostPointerforArguments(probs);
+     CudnnFrontend::AddVariableForArguments<int>((int*)labels);
+     CudnnFrontend::AddVariableForArguments<int>((int*)labelLengths);
+     CudnnFrontend::AddVariableForArguments<int>((int*)inputLengths);
+     CudnnFrontend::AddVariableForArguments<long long int>((long long int)gradientsDesc);
+     CudnnFrontend::AddVariableForArguments<cudnnCTCLossAlgo_t>(algo);
+     CudnnFrontend::AddVariableForArguments<cudnnCTCLossDescriptor_t>(ctcLossDesc);
+     CudnnFrontend::AddHostPointerforArguments(workspace);
+     CudnnFrontend::AddVariableForArguments<size_t>(workSpaceSizeInBytes);
+
+     CudnnFrontend::Execute("cudnnCTCLoss");
+     if(CudnnFrontend::Success()){
+          *costs = CudnnFrontend::GetOutputHostPointer();
+          *gradients = CudnnFrontend::GetOutputHostPointer();
+     }
+     return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetCTCLossWorkspaceSize(cudnnHandle_t handle,
+    								  const cudnnTensorDescriptor_t probsDesc, /* Tensor descriptor for probabilities, the dimensions are T,N,A (T is the
+                                                timing steps, N is the mini batch size, A is the alphabet size) */
+   	 							  const cudnnTensorDescriptor_t gradientsDesc, /* Tensor descriptor for gradients, the
+                                                    dimensions are T,N,A. To compute costs
+                                                    only, set it to NULL */
+    								  const int *labels,                           /* labels, in CPU memory */
+    								  const int *labelLengths,                     /* the length of each label, in CPU memory */
+    								  const int *inputLengths,                     /* the lengths of timing steps in each batch, in CPU memory */
+    								  cudnnCTCLossAlgo_t algo,                     /* algorithm selected, supported now 0 and 1 */
+   	 							  cudnnCTCLossDescriptor_t ctcLossDesc,
+    								  size_t *sizeInBytes){ /* pointer to the returned workspace size */
+
+    
+ 
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)probsDesc);
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)gradientsDesc);
+    CudnnFrontend::AddVariableForArguments<int>((int*)labels);
+    CudnnFrontend::AddVariableForArguments<int>((int*)labelLengths);
+    CudnnFrontend::AddVariableForArguments<int>((int*)inputLengths);
+    CudnnFrontend::AddVariableForArguments<cudnnCTCLossAlgo_t>(algo);
+    CudnnFrontend::AddVariableForArguments<cudnnCTCLossDescriptor_t>(ctcLossDesc);
+    
+    CudnnFrontend::Execute("cudnnGetCTCLossWorkspaceSize");
+    if(CudnnFrontend::Success()){
+         *sizeInBytes = CudnnFrontend::GetOutputVariable<size_t>();
+     }
+     return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateAlgorithmDescriptor(cudnnAlgorithmDescriptor_t *algoDesc){
+
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::Execute("cudnnCreateAlgorithmDescriptor");
+    if(CudnnFrontend::Success()){
+        *algoDesc = CudnnFrontend::GetOutputVariable<cudnnAlgorithmDescriptor_t>();
+    }   
+    return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetAlgorithmDescriptor(cudnnAlgorithmDescriptor_t algoDesc, cudnnAlgorithm_t algorithm){
 
 
+    CudnnFrontend::Prepare();
 
-
-
-
-
-
-
-
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)algoDesc);
+    CudnnFrontend::AddVariableForArguments<cudnnAlgorithm_t>(algorithm);
    
+    CudnnFrontend::Execute("cudnnSetAlgorithmDescriptor");
+    if(CudnnFrontend::Success()){
+          algoDesc = CudnnFrontend::GetOutputVariable<cudnnAlgorithmDescriptor_t>();
+     }
+     return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetAlgorithmDescriptor(const cudnnAlgorithmDescriptor_t algoDesc, cudnnAlgorithm_t *algorithm){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)algoDesc);
+   CudnnFrontend::AddVariableForArguments<cudnnAlgorithm_t>((cudnnAlgorithm_t*)algorithm);
+
+   CudnnFrontend::Execute("cudnnGetAlgorithmDescriptor");
+   
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnCopyAlgorithmDescriptor(const cudnnAlgorithmDescriptor_t src, cudnnAlgorithmDescriptor_t dest){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)src);
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)dest); 
+
+   CudnnExecute("cudnnCopyAlgorithmDescriptor");
+   
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyAlgorithmDescriptor(cudnnAlgorithmDescriptor_t algoDesc){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)algoDesc); 
+
+   CudnnFrontend::Execute("cudnnDestroyAlgorithmDescriptor");
+
+   CudnnFrontend::GetExitCode(); 
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateAlgorithmPerformance(cudnnAlgorithmPerformance_t *algoPerf, int numberToCreate){
+
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<int>(numberToCreate);
+
+   CudnnFrontend::Execute("cudnnCreateAlgorithmPerformance");
+   if(CudnnFrontend::Success()){
+        *algoPerf = CudnnFrontend::GetOutputVariable<cudnnAlgorithmPerformance_t>();
+   }
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetAlgorithmPerformance(cudnnAlgorithmPerformance_t algoPerf,
+                             					  cudnnAlgorithmDescriptor_t algoDesc,
+                             					  cudnnStatus_t status,
+                             					  float time,
+                             					  size_t memory){
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnAlgorithmPerformance_t>(algoPerf);
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)algoDesc);
+   CudnnFrontend::AddVariableForArguments<cudnnStatus_t>(status);
+   CudnnFrontend::AddVarialeForArguments<float>(time);
+   CudnnFrontend::AddVariableForArguments<size_t>(memory);
+
+   CudnnFrontend::Execute("cudnnSetAlgorithmPerformance");
+   if(CudnnFrontend::Success()){
+      algoPerf = CudnnFrontend::GetOutputVariable<cudnnAlgorithmPerformance_t>();
+   }
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetAlgorithmPerformance(const cudnnAlgorithmPerformance_t algoPerf,
+                             					  cudnnAlgorithmDescriptor_t *algoDesc,
+                             					  cudnnStatus_t *status,
+                             					  float *time,
+                             					  size_t *memory){
 
 
 
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<cudnnAlgorithmPerformance_t>(algoPerf);
+    
+    CudnnFrontend::Execute("cudnnGetAlgorithmPerformance");
+    if(CudnnFrontend::Success()){
+        algoPerf  = CudnnFrontend::GetOutputVariable<cudnnAlgorithmPerformance_t>();
+        *algoDesc = CudnnFrontend::GetOutputVariable<cudnnAlgorithmDescriptor_t>();
+        *status   = CudnnFrontend::GetOutputVariable<cudnnStatus_t>();
+        *memory   = CudnnFrontend::GetOutputVariable<size_t>();
+     }
+     return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyAlgorithmPerformance(cudnnAlgorithmPerformance_t *algoPerf, int numberToDestroy){
 
 
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int*)algoPerf);
+    CudnnFrontend::AddVariableForArguments<int>(numberToDestroy);
+
+    CudnnFrontend::Execute("cudnnDestroyAlgorithmPerformance");
+
+    CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetAlgorithmSpaceSize(cudnnHandle_t handle, cudnnAlgorithmDescriptor_t algoDesc, size_t *algoSpaceSizeInBytes){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)algoDesc);
+
+   CudnnFrontend::Execute("cudnnGetAlgorithmSpaceSize");
+   if(CudnnFrontend::Success()){
+       *algoSpaceSizeInBytes = CudnnFrontend::GetOutputVariable<size_t>(); 
+   }
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSaveAlgorithm(cudnnHandle_t handle,
+                   					cudnnAlgorithmDescriptor_t algoDesc,
+                   					void *algoSpace,
+                   					size_t algoSpaceSizeInBytes){
+
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)algoDesc);
+    CudnnFrontend::AddHostPointerForArguments(algoSpace);
+    CudnnFrontend::AddVariableForArguments<size_t>(algoSpaceSizeInBytes);
+
+    CudnnFrontend::Execute("cudnnSaveAlgorithm");
+    
+    CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnRestoreAlgorithm(cudnnHandle_t handle,
+                      					   void *algoSpace,
+                      					   size_t algoSpaceSizeInBytes,
+                      					   cudnnAlgorithmDescriptor_t algoDesc){
 
 
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+    CudnnFrontend::AddHostPointerForArguments(algoSpace);
+    CudnnFrontend::AddVariableForArguments<size_t>(algoSpaceSizeInBytes);
+    CudnnFrontend::AddVariableForArguments<cudnnAlgorithmDescriptor_t>(algoDesc);
+
+    CudnnFrontend::Execute("cudnnRestoreAlgorithm");
+    
+    return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetCallback(unsigned mask, void *udata, cudnnCallback_t fptr){
 
 
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<unsigned>(mask);
+    CudnnFrontend::AddHostPointerForArguments(udata);
+    CudnnFrontend::AddVariableForArguments<cudnnCallback_t>(fptr);
+
+    CudnnFrontend::Execute("cudnnSetCallback");
+
+    CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetCallback(unsigned *mask, void **udata, cudnnCallback_t *fptr){
 
 
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::Execute("cudnnGetCallback");
+   if(CudnnFrontend::Success()){
+       *mask = CudnnFrontend::GetOutputVariable<unsigned>();
+       *udata = CudnnFrontend::GetOutputHostPointer();
+       *fptr  = CudnnFrontend::GetOutputVariable<cudnnCallback_t>();
+   }
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateFusedOpsConstParamPack(cudnnFusedOpsConstParamPack_t *constPack, cudnnFusedOps_t ops){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsConstParamPack_t>((cudnnFusedOpsConstParamPack_t*)constPack);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOps_t>(ops);
+
+   CudnnFrontend::Execute("cudnnCreateFusedOpsConstParamPack");
+   
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyFusedOpsConstParamPack(cudnnFusedOpsConstParamPack_t constPack){
 
 
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsConstParamPack_t>(constPack);
+
+   CudnnFrontend::Execute("cudnnDestroyFusedOpsConstParamPack");
+
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetFusedOpsConstParamPackAttribute(cudnnFusedOpsConstParamPack_t constPack,
+                                        				     cudnnFusedOpsConstParamLabel_t paramLabel,
+                                        				     const void *param){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsConstParamPack_t>(constPack);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsConstParamLabel_t>(paramLabel);
+   CudnnFrontend::AddHostPointer(param);
+
+   CudnnFrontend::Execute("cudnnSetFusedOpsConstParamPackAttribute");
+
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetFusedOpsConstParamPackAttribute(const cudnnFusedOpsConstParamPack_t constPack,
+                                        		   		     cudnnFusedOpsConstParamLabel_t paramLabel,
+                                                                             void *param,
+                                                                             int *isNULL){
 
 
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsConstParamPack_t>(constPack);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsConstParamLabel_t>(paramLabel);
+   CudnnFrontend::AddHostPointerForArguments(param);
+   CudnnFrontend::AddVariableForArguments<int>((int*)isNULL);
+
+   CudnnFrontend::Execute("cudnnGetFusedOpsConstParamPackAttribute");
+   if(CudnnFrontend::Success()){
+         *isNULL = CudnnFrontend::GetOutputVariable<int>();
+   }
+    return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateFusedOpsVariantParamPack(cudnnFusedOpsVariantParamPack_t *varPack, cudnnFusedOps_t ops){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOps_t>(ops);
+
+   CudnnFrontend::Execute("cudnnCreateFusedOpsVariantParamPack");
+   if(CudnnFrontend::Success()){
+      *varPack = CudnnFrontend::GetOutputVariable<cudnnFusedOpsVariantParamPack_t>();
+   }
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyFusedOpsVariantParamPack(cudnnFusedOpsVariantParamPack_t varPack){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)varPack);
+
+   CudnnFrontend::Execute("cudnnDestroyFusedOpsVariantParamPack");
+   
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetFusedOpsVariantParamPackAttribute(cudnnFusedOpsVariantParamPack_t varPack,
+                                          				       cudnnFusedOpsVariantParamLabel_t paramLabel,
+                                          				       void *ptr){
 
 
+   CudnnFrontend::prepare();
 
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsVariantParamPack_t>(varPack);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsVariantParamLabel_t>(paramLabel);
+   CudnnFrontend::AddHostPointerForArguments(ptr);
+
+   CudnnFrontend::Execute("cudnnSetFusedOpsVariantParamPackAttribute");
+   
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetFusedOpsVariantParamPackAttribute(const cudnnFusedOpsVariantParamPack_t varPack,
+                                          				       cudnnFusedOpsVariantParamLabel_t paramLabel,
+                                          				       void *ptr){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsVariantParamPack_t>(varPack);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsVariantParamLabel_t>(paramLabel);
+
+   CudnnFrontend::Execute("cudnnGetFusedOpsVariantParamPackAttribute");
+   if(CudnnFrontend::Success()){
+       *ptr = CudnnFrontend::GetOutputHostPointer();
+   }
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateFusedOpsPlan(cudnnFusedOpsPlan_t *plan, cudnnFusedOps_t ops){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsPlan_t>((cudnnFusedOpsPlan_t*)plan);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOps_t>(ops);
+
+   CudnnFrontend::Execute("cudnnCreateFusedOpsPlan");
+
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyFusedOpsPlan(cudnnFusedOpsPlan_t plan){
+
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsPlan_t>(plan);
+
+   CudnnFrontend::Execute("cudnnDestroyFusedOpsPlan");
+
+   CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnMakeFusedOpsPlan(cudnnHandle_t handle,
+                      					   cudnnFusedOpsPlan_t plan,
+                      					   const cudnnFusedOpsConstParamPack_t constPack,
+                      					   size_t *workspaceSizeInBytes){
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsPlan_t>(plan);
+   CudnnFrontend::AddVariableForArguments<cudnnFusedOpsConstParamPack_t>(constPack);
+
+   CudnnFrontend::Execute("cudnnMakeFusedOpsPlan");
+   if(CudnnFrontend::Success()){
+       *workspaceSizeInBytes = CudnnFrontend::GetOutputVariable<size_t>();
+   }
+   return CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnFusedOpsExecute(cudnnHandle_t handle, const cudnnFusedOpsPlan_t plan, cudnnFusedOpsVariantParamPack_t varPack){
+
+  CudnnFrontend::Prepare();
+
+  CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+  CudnnFrontend::AddVariableForArguments<cudnnFusedOpsPlan_t>(plan);
+  CudnnFrontend::AddVariableForArguments<cudnnFusedOpsVariantParamPack_t>(varPack);
+
+  CudnnFrontend::Execute("cudnnFusedOpsExecute");
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  CudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetRNNDescriptor_v6(cudnnHandle_t handle,
+                         				      cudnnRNNDescriptor_t rnnDesc,
+                         				      const int hiddenSize,
+                         				      const int numLayers,
+                         				      cudnnDropoutDescriptor_t dropoutDesc,
+                         			  	      cudnnRNNInputMode_t inputMode,
+                         				      cudnnDirectionMode_t direction,
+                         				      cudnnRNNMode_t mode,
+                         				      cudnnRNNAlgo_t algo,
+                         				      cudnnDataType_t mathPrec){
+
+
+   CudnnFrontend::Prepare();
+
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)rnnDesc);
+   CudnnFrontend::AddVariableForArguments<int>(hiddenSize);
+   CudnnFrontend::AddVariableForArguments<int>(numLayers);
+   CudnnFrontend::AddVariableForArguments<long long int>((long long int)dropoutDesc);
+   CudnnFrontend::AddVariableForArguments<cudnnRNNInputMode_t>(inputMode);
+   CudnnFrontend::AddVariableForArguments<cudnnDirectionMode_t>(direction);
+   CudnnFrontend::AddVariableForArguments<cudnnRNNMode_t>(mode);
+   CudnnFrontend::AddVariableForArguments<cudnnRNNAlgo_t>(algo);
+   CudnnFrontend::AddVariableForArguments<cudnnDataType_t>(mathPrec);
+
+   CudnnFrontend::Execute("cudnnSetRNNDescriptor_v6");
+   if(Cudnnfrontend::Success()){
+       rnnDesc = CudnnFrontend::GetOutputVariable<cudnnRNNDescriptor_t>();
+   }
+   return cudnnFrontend::GetExitCode();
+}
+
+extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetRNNDescriptor_v5(cudnnRNNDescriptor_t rnnDesc,
+                         				      int hiddenSize,
+                         				      int numLayers,
+                         				      cudnnDropoutDescriptor_t dropoutDesc,
+                         				      cudnnRNNInputMode_t inputMode,
+                         				      cudnnDirectionMode_t direction,
+                         				      cudnnRNNMode_t mode,
+                        				       cudnnDataType_t mathPrec){
+
+
+
+    CudnnFrontend::Prepare();
+
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)rnnDesc);
+    CudnnFrontend::AddVariableForArguments<int>(hiddenSize);
+    CudnnFrontend::AddVariableForArguments<int>(numLayers);
+    CudnnFrontend::AddVariableForArguments<long long int>((long long int)dropoutDesc);
+    CudnnFrontend::AddVariableForArguments<cudnnRNNInputMode_t>(inputMode);
+    CudnnFrontend::AddVariableForArguments<cudnnDirectionMode_t>(direction);
+    CudnnFrontend::AddVariableForArguments<cudnnRNNMode_t>(mode);
+    CudnnFrontend::AddVariableForArguments<cudnnDataType_t>(mathPrec);
+
+    CudnnFrontend::Execute("cudnnSetRNNDescriptor_v5");
+    if(CudnnFrontend::Success()){
+          rnnDesc = CudnnFrontend::GetOutputVariable<cudnnRNNDescriptor_t>();
+     }
+     return CudnnFrontend::GetExitCode();
+}
