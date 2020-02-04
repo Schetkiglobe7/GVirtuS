@@ -62,7 +62,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroy(cudnnHandle_t handle){
     CudnnFrontend::Execute("cudnnDestroy");
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetStream(cudnnHandle_t handle, cudaStream_t streamId){
     CudnnFrontend::Prepare();
 
@@ -81,7 +81,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetStream(cudnnHandle_t handle, cudaSt
         *streamId = (cudaStream_t) CudnnFrontend::GetOutputVariable<long long int>();
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateTensorDescriptor(cudnnTensorDescriptor_t *tensorDesc){
     CudnnFrontend::Prepare();
 
@@ -113,7 +113,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetTensor4dDescriptor( cudnnTensorDesc
     }
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetTensor4dDescriptorEx( cudnnTensorDescriptor_t tensorDesc,
                               cudnnDataType_t dataType,
                               int n,
@@ -247,7 +247,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetTensorSizeInBytes(const cudnnTensor
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyTensorDescriptor(cudnnTensorDescriptor_t tensorDesc){
     CudnnFrontend::Prepare();
 
@@ -255,7 +255,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyTensorDescriptor(cudnnTensorDes
     CudnnFrontend::Execute("cudnnDestroyTensorDescriptor");
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnInitTransformDest(const cudnnTensorTransformDescriptor_t transformDesc,
                                                             const cudnnTensorDescriptor_t srcDesc,
                                                             cudnnTensorDescriptor_t destDesc,
@@ -423,7 +423,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetFoldedConvBackwardDataDescriptors(c
       }
       return CudnnFrontend::GetExitCode(); 
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnAddTensor(
                                 cudnnHandle_t                       handle,
                                 const void                         *alpha,
@@ -450,7 +450,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnAddTensor(
      }
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateOpTensorDescriptor(cudnnOpTensorDescriptor_t *opTensorDesc){
 
     CudnnFrontend::Prepare();
@@ -710,7 +710,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnScaleTensor( cudnnHandle_t            
     CudnnFrontend::Execute("cudnnScaleTensor");
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateFilterDescriptor(cudnnFilterDescriptor_t *filterDesc){
     CudnnFrontend::Prepare();
 
@@ -743,7 +743,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetFilter4dDescriptor( cudnnFilterDesc
     }
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C"  CUDNNWINAPI cudnnStatus_t cudnnGetFilter4dDescriptor( cudnnFilterDescriptor_t filterDesc,
                                                                                 cudnnDataType_t *dataType,
                                                                                 cudnnTensorFormat_t  *format,
@@ -995,7 +995,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetFilterSizeInBytes(const cudnnFilter
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyFilterDescriptor(cudnnFilterDescriptor_t filterDesc){
     CudnnFrontend::Prepare();
 
@@ -1003,7 +1003,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyFilterDescriptor(cudnnFilterDes
     CudnnFrontend::Execute("cudnnDestroyFilterDescriptor");
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnTransformFilter(cudnnHandle_t handle,
                                                           const cudnnTensorTransformDescriptor_t transDesc,
                                                           const void *alpha,
@@ -1053,7 +1053,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnReorderFilterAndBias(cudnnHandle_t han
    
    return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateConvolutionDescriptor(cudnnConvolutionDescriptor_t *convDesc){
     CudnnFrontend::Prepare();
 
@@ -1063,7 +1063,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateConvolutionDescriptor(cudnnConvo
     }       
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetConvolutionMathType(cudnnConvolutionDescriptor_t convDesc, cudnnMathType_t mathType){
 
     CudnnFrontend::Prepare();
@@ -1140,7 +1140,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionReorderType(cudnnConvolu
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI  cudnnSetConvolution2dDescriptor( cudnnConvolutionDescriptor_t convDesc,
                                                                     int pad_h,
                                                                     int pad_w,
@@ -1167,7 +1167,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI  cudnnSetConvolution2dDescriptor( cudnnConv
         convDesc = (cudnnConvolutionDescriptor_t)CudnnFrontend::GetOutputVariable<long long int>();
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" CUDNNWINAPI cudnnStatus_t cudnnGetConvolution2dDescriptor( const cudnnConvolutionDescriptor_t convDesc,
                                                                         int* pad_h,
                                                                         int* pad_w,
@@ -1195,7 +1195,7 @@ extern "C" CUDNNWINAPI cudnnStatus_t cudnnGetConvolution2dDescriptor( const cudn
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t cudnnGetConvolution2dForwardOutputDim( const cudnnConvolutionDescriptor_t convDesc,
                                                                 const cudnnTensorDescriptor_t inputTensorDesc,
                                                                 const cudnnFilterDescriptor_t filterDesc,
@@ -1219,7 +1219,7 @@ extern "C" cudnnStatus_t cudnnGetConvolution2dForwardOutputDim( const cudnnConvo
     }
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetConvolutionNdDescriptor(cudnnConvolutionDescriptor_t convDesc,
                                                                                    int arrayLength,
                                                                                    const int *padA,
@@ -1289,7 +1289,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionNdForwardOutputDim(const
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyConvolutionDescriptor(cudnnConvolutionDescriptor_t convDesc){
 
     CudnnFrontend::Prepare();
@@ -1300,7 +1300,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyConvolutionDescriptor(cudnnConv
 
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionForwardAlgorithmMaxCount(cudnnHandle_t handle, int *count){
 
     CudnnFrontend::Prepare();
@@ -1374,7 +1374,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnFindConvolutionForwardAlgorithmEx(cudn
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionForwardAlgorithm(cudnnHandle_t handle,
                                                                               const cudnnTensorDescriptor_t xDesc,
                                                                               const cudnnFilterDescriptor_t wDesc,
@@ -1400,7 +1400,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionForwardAlgorithm(cudnnHa
     }
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionForwardAlgorithm_v7(cudnnHandle_t handle,
                                                                             const cudnnTensorDescriptor_t srcDesc,
                                                                             const cudnnFilterDescriptor_t filterDesc,
@@ -1427,7 +1427,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionForwardAlgorithm_v7(cudn
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionForwardWorkspaceSize(cudnnHandle_t handle,
                                                                                   const cudnnTensorDescriptor_t xDesc,
                                                                                   const cudnnFilterDescriptor_t wDesc,
@@ -1488,7 +1488,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionForward(cudnnHandle_t handl
     }
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBiasActivationForward(cudnnHandle_t handle,
                                                                            const void *alpha1,
                                                                            const cudnnTensorDescriptor_t xDesc,
@@ -1535,7 +1535,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBiasActivationForward(cudnn
       }
       return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardBias(cudnnHandle_t handle,
                                                                   const void *alpha,
                                                                   const  cudnnTensorDescriptor_t dyDesc,
@@ -1560,7 +1560,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardBias(cudnnHandle_t 
      }
      return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardFilterAlgorithmMaxCount(cudnnHandle_t handle, int *count){
 
     CudnnFrontend::Prepare();
@@ -1636,7 +1636,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnFindConvolutionBackwardFilterAlgorithm
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardFilterAlgorithm(cudnnHandle_t handle,
                                                                                 const cudnnTensorDescriptor_t xDesc,
                                                                                 const cudnnTensorDescriptor_t dyDesc,
@@ -1662,7 +1662,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardFilterAlgorithm(
      }
      return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardFilterAlgorithm_v7(cudnnHandle_t handle,
                                                                                    const cudnnTensorDescriptor_t srcDesc,
                                                                                    const cudnnTensorDescriptor_t diffDesc,
@@ -1688,7 +1688,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardFilterAlgorithm_
       }
       return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardFilterWorkspaceSize(cudnnHandle_t handle,
                                                                                     const cudnnTensorDescriptor_t xDesc,
                                                                                     const cudnnTensorDescriptor_t dyDesc,
@@ -1751,7 +1751,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardFilter(cudnnHandle_
      }
      return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardDataAlgorithmMaxCount(cudnnHandle_t handle, int *count){
      
      CudnnFrontend::Prepare();
@@ -1827,7 +1827,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnFindConvolutionBackwardDataAlgorithmEx
    }
    return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardDataAlgorithm(cudnnHandle_t handle,
  									      const cudnnFilterDescriptor_t wDesc,
 									      const cudnnTensorDescriptor_t dyDesc,
@@ -1853,7 +1853,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardDataAlgorithm(cu
      }
      return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardDataAlgorithm_v7(cudnnHandle_t handle,
 										 const cudnnFilterDescriptor_t filterDesc,
            								  	 const cudnnTensorDescriptor_t diffDesc,
@@ -1879,7 +1879,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardDataAlgorithm_v7
      }
      return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetConvolutionBackwardDataWorkspaceSize(cudnnHandle_t handle,
 										  const cudnnFilterDescriptor_t wDesc,
 										  const cudnnTensorDescriptor_t dyDesc,
@@ -1941,7 +1941,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardData(cudnnHandle_t 
      }
      return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnIm2Col(cudnnHandle_t handle,
 						 const cudnnTensorDescriptor_t xDesc,
 						 const void *x,
@@ -1963,7 +1963,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnIm2Col(cudnnHandle_t handle,
      }
      return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnSoftmaxForward(cudnnHandle_t handle,
 							 cudnnSoftmaxAlgorithm_t algo,
 							 cudnnSoftmaxMode_t mode,
@@ -1992,7 +1992,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSoftmaxForward(cudnnHandle_t handle,
      }
      return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnSoftmaxBackward(cudnnHandle_t handle,
 							  cudnnSoftmaxAlgorithm_t algo,
 							  cudnnSoftmaxMode_t mode,
@@ -2025,7 +2025,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSoftmaxBackward(cudnnHandle_t handle,
      }
      return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreatePoolingDescriptor(cudnnPoolingDescriptor_t *poolingDesc){
    CudnnFrontend::Prepare();
 
@@ -2063,7 +2063,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetPooling2dDescriptor(cudnnPoolingDes
     }  
    return CudnnFrontend::GetExitCode();
 }
-/* 
+ 
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetPooling2dDescripto(const cudnnPoolingDescriptor_t poolingDesc,
 							        cudnnPoolingMode_t *mode,
 								cudnnNanPropagation_t *maxpoolingNanOpt,
@@ -2182,7 +2182,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetPooling2dForwardOutputDim(const cud
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyPoolingDescriptor(cudnnPoolingDescriptor_t poolingDesc){
 
     CudnnFrontend::Prepare();
@@ -2282,7 +2282,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetActivationDescriptor(cudnnActivatio
     }
     return CudnnFrontend::GetExitCode();
 }
-/*        
+        
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetActivationDescriptor(const cudnnActivationDescriptor_t activationDesc,
                                                                   cudnnActivationMode_t *mode,
                                                                   cudnnNanPropagation_t *reluNanOpt,
@@ -2297,7 +2297,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnGetActivationDescriptor(const cudnnAct
     }
     return CudnnFrontend::GetExitCode();
 }
-*/
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnDestroyActivationDescriptor(cudnnActivationDescriptor_t activationDesc){
     CudnnFrontend::Prepare();
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)activationDesc);
@@ -2369,7 +2369,7 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnActivationBackward(cudnnHandle_t handl
     }
     return CudnnFrontend::GetExitCode();
 }
-/*
+
 extern "C" cudnnStatus_t CUDNNWINAPI cudnnCreateLRNDescriptor(cudnnLRNDescriptor_t *normDesc){
     
     CudnnFrontend::Prepare();
@@ -5501,4 +5501,3 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetRNNDescriptor_v5(cudnnRNNDescriptor
      }
      return CudnnFrontend::GetExitCode();
 }
-*/
