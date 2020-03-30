@@ -99,6 +99,8 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSetTensor4dDescriptor( cudnnTensorDesc
                             int c, int h, int w ) {
     CudnnFrontend::Prepare();
 
+    //printf("[cudnnSetTensor4dDescriptor] N, C, H, W: %d %d %d %d\n", n, c, h, w);
+
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)tensorDesc);
     CudnnFrontend::AddVariableForArguments<cudnnTensorFormat_t>(format);
     CudnnFrontend::AddVariableForArguments<cudnnDataType_t>(dataType);
@@ -434,11 +436,13 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnAddTensor(
                                 void                               *C ){
     CudnnFrontend::Prepare();
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    //CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)aDesc);
     //CudnnFrontend::AddVariableForArguments(A);
     CudnnFrontend::AddDevicePointerForArguments(A);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
+    //CudnnFrontend::AddHostPointerForArguments(beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)cDesc);
     //CudnnFrontend::AddVariableForArguments(C);
     CudnnFrontend::AddDevicePointerForArguments(C);
@@ -1466,10 +1470,15 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionForward(cudnnHandle_t handl
                                                              const cudnnTensorDescriptor_t yDesc,
                                                              void *y){
 
+
+    //printf("ALPHA IN FRONTEND INIZIALE: %f\n", *(float  *)alpha);
+
     CudnnFrontend::Prepare();
   
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
+    //CudnnFrontend::AddHostPointerForArguments(&alpha);
+    //CudnnFrontend::AddDevicePointerForArguments(&alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)xDesc);
     CudnnFrontend::AddDevicePointerForArguments(x);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)wDesc);
@@ -1478,9 +1487,12 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionForward(cudnnHandle_t handl
     CudnnFrontend::AddVariableForArguments<cudnnConvolutionFwdAlgo_t>(algo);
     CudnnFrontend::AddDevicePointerForArguments(workSpace);
     CudnnFrontend::AddVariableForArguments<size_t>(workSpaceSizeInBytes);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
+    //CudnnFrontend::AddHostPointerForArguments(&beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)yDesc);
     CudnnFrontend::AddDevicePointerForArguments(y);
+
+    //printf("ALPHA IN FRONTEND FINALE: %f\n", *(float *) alpha);
 
     CudnnFrontend::Execute("cudnnConvolutionForward");
     if(CudnnFrontend::Success()){
@@ -1547,10 +1559,12 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardBias(cudnnHandle_t 
      CudnnFrontend::Prepare();
 
      CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
-     CudnnFrontend::AddHostPointerForArguments(alpha);
+     CudnnFrontend::AddVariableForArguments(*(float *)alpha);
+     //CudnnFrontend::AddHostPointerForArguments(alpha);
      CudnnFrontend::AddVariableForArguments<long long int>((long long int)dyDesc);
      CudnnFrontend::AddDevicePointerForArguments(dy);
-     CudnnFrontend::AddHostPointerForArguments(beta);
+     CudnnFrontend::AddVariableForArguments(*(float *)beta);
+     //CudnnFrontend::AddHostPointerForArguments(beta);
      CudnnFrontend::AddVariableForArguments<long long int>((long long int)dbDesc);
      CudnnFrontend::AddDevicePointerForArguments(db);
      
@@ -1732,7 +1746,8 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardFilter(cudnnHandle_
      CudnnFrontend::Prepare();
 
      CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
-     CudnnFrontend::AddHostPointerForArguments(alpha);
+     CudnnFrontend::AddVariableForArguments(*(float *)alpha);
+     //CudnnFrontend::AddHostPointerForArguments(alpha);
      CudnnFrontend::AddVariableForArguments<long long int>((long long int)xDesc);
      CudnnFrontend::AddDevicePointerForArguments(x);
      CudnnFrontend::AddVariableForArguments<long long int>((long long int)dyDesc);
@@ -1741,7 +1756,8 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardFilter(cudnnHandle_
      CudnnFrontend::AddVariableForArguments<cudnnConvolutionBwdFilterAlgo_t>(algo);
      CudnnFrontend::AddDevicePointerForArguments(workSpace);
      CudnnFrontend::AddVariableForArguments<size_t>(workSpaceSizeInBytes);
-     CudnnFrontend::AddHostPointerForArguments(beta);
+     CudnnFrontend::AddVariableForArguments(*(float *)beta);
+     //CudnnFrontend::AddHostPointerForArguments(beta);
      CudnnFrontend::AddVariableForArguments<long long int>((long long int)dwDesc);
      CudnnFrontend::AddDevicePointerForArguments(dw);
 
@@ -1922,7 +1938,8 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardData(cudnnHandle_t 
     CudnnFrontend::Prepare();
 
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
+    //CudnnFrontend::AddHostPointerForArguments(alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)wDesc);
     CudnnFrontend::AddDevicePointerForArguments(w);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)dyDesc);
@@ -1931,7 +1948,8 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnConvolutionBackwardData(cudnnHandle_t 
     CudnnFrontend::AddVariableForArguments<cudnnConvolutionBwdDataAlgo_t>(algo);
     CudnnFrontend::AddDevicePointerForArguments(workSpace);
     CudnnFrontend::AddVariableForArguments<size_t>(workSpaceSizeInBytes);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
+    //CudnnFrontend::AddHostPointerForArguments(beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)dxDesc);
     CudnnFrontend::AddDevicePointerForArguments(dx);
 
@@ -1979,10 +1997,12 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnSoftmaxForward(cudnnHandle_t handle,
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
     CudnnFrontend::AddVariableForArguments<cudnnSoftmaxAlgorithm_t>(algo);
     CudnnFrontend::AddVariableForArguments<cudnnSoftmaxMode_t>(mode);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    //CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)xDesc);
     CudnnFrontend::AddDevicePointerForArguments(x);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    //CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)yDesc);
     CudnnFrontend::AddDevicePointerForArguments(y);
 
@@ -2207,10 +2227,11 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnPoolingForward(cudnnHandle_t handle,
 
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)poolingDesc);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)xDesc);
     CudnnFrontend::AddDevicePointerForArguments(x);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
+    //CudnnFrontend::AddHostPointerForArguments(beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)yDesc);
     CudnnFrontend::AddDevicePointerForArguments(y); 
     
@@ -2239,14 +2260,16 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnPoolingBackward(cudnnHandle_t handle,
 
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)poolingDesc);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
+    //CudnnFrontend::AddHostPointerForArguments(alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)yDesc);
     CudnnFrontend::AddDevicePointerForArguments(y);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)dyDesc);
     CudnnFrontend::AddDevicePointerForArguments(dy);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)xDesc);
     CudnnFrontend::AddDevicePointerForArguments(x);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
+    //CudnnFrontend::AddHostPointerForArguments(beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)dxDesc);
     CudnnFrontend::AddDevicePointerForArguments(dx);
 
@@ -2319,10 +2342,12 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnActivationForward(cudnnHandle_t handle
 
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)activationDesc);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    //CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)xDesc);
     CudnnFrontend::AddDevicePointerForArguments(x);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
+    //CudnnFrontend::AddHostPointerForArguments(beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)yDesc);
     CudnnFrontend::AddDevicePointerForArguments(y);
 
@@ -2351,14 +2376,16 @@ extern "C" cudnnStatus_t CUDNNWINAPI cudnnActivationBackward(cudnnHandle_t handl
 
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)handle);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)activationDesc);
-    CudnnFrontend::AddHostPointerForArguments(alpha);
+    //CudnnFrontend::AddHostPointerForArguments(alpha);
+    CudnnFrontend::AddVariableForArguments(*(float *)alpha);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)yDesc);
     CudnnFrontend::AddDevicePointerForArguments(y);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)dyDesc);
     CudnnFrontend::AddDevicePointerForArguments(dy);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)xDesc);
     CudnnFrontend::AddDevicePointerForArguments(x);
-    CudnnFrontend::AddHostPointerForArguments(beta);
+    CudnnFrontend::AddVariableForArguments(*(float *)beta);
+    //CudnnFrontend::AddHostPointerForArguments(beta);
     CudnnFrontend::AddVariableForArguments<long long int>((long long int)dxDesc);
     CudnnFrontend::AddDevicePointerForArguments(dx);
     
